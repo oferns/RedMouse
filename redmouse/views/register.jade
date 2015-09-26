@@ -1,0 +1,26 @@
+﻿extends layout
+
+block header
+     - if (message.length > 0) 
+        .alert.alert-danger=message   
+
+block content
+    .subcontainer
+        h3 
+            span.fa.fa-sign-in Register
+            
+        #register
+            form(name="register", action="/register", method="post")
+                .field
+                    input(type='text', name='email', placeholder='email')
+                .field
+                    input(type='submit', value='register')
+    .subcontainer
+        :markdown
+            Bacon ipsum dolor amet elit labore laboris, andouille ut capicola turducken pancetta pork cillum magna exercitation. 
+            Laborum swine ut et ullamco, cupidatat **meatball shankle fatback**. Deserunt elit excepteur landjaeger pork loin ullamco consectetur eiusmod. 
+            Ex sausage enim turkey minim. Reprehenderit ham swine irure brisket in shankle. Pancetta duis ut est aliquip bacon.
+
+            Strip steak anim tempor filet mignon aliquip ut pork belly nulla culpa chicken frankfurter duis enim sunt venison. 
+            T-bone cow ipsum ball tip sirloin kevin aliquip exercitation rump in ribeye biltong pork belly sint. 
+            Biltong ut sunt drumstick cupim. In corned beef cupidatat cupim frankfurter ball tip irure elit.

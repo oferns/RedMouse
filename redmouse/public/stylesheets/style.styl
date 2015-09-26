@@ -1,0 +1,40 @@
+﻿$w = #F8F8F8
+$g = #EEEEEE
+$r = #EE0000
+$d = #CC0000 
+$b = #111111
+
+
+@import '../../node_modules/font-awesome-stylus/stylus'
+
+
+// Axis for useful mixins
+@import '../../node_modules/axis/axis'
+
+// Jeet for responsive
+@import '../../node_modules/jeet/stylus/jeet'
+
+
+normalize-css()
+base()
+edit()
+
+
+#container
+	center(90%)
+
+.subcontainer
+	center(100%)
+
+#nav
+	nav($size: 2, $bg-color: $b, $pos-fxed: true, $link-color: $r)
+	
+#content
+	col(3/3)
+	transition all .5s ease
+
+#login
+	col(1/2)
+	
+#footer 
+	fixed bottom
