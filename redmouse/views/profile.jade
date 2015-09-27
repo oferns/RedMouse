@@ -1,0 +1,13 @@
+﻿extends layout
+
+block header
+     - if (message.length > 0) 
+        .alert.alert-danger=message   
+
+block content
+        h1 Profile
+        h2=user.email
+        p
+            a(href='/logout') logout
+block footer
+        h3 footer

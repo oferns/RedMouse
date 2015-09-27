@@ -1,4 +1,5 @@
-﻿var express = require('express');
+﻿var fs = require('fs');
+var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -7,16 +8,23 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var passport = require('passport');
 var flash = require('connect-flash');
-
+var Auth = require('./services/Auth');
 var app = express();
 
+var config = fs.readFileSync('./settings.json');
+
+var settings = JSON.parse(config);
+
+var auth = new Auth(settings);
+
+var accessLogStream = fs.createWriteStream(__dirname + '/access.log', { flags: 'a' })
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
+app.use(logger('dev', { stream: accessLogStream }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser('secret'));
@@ -33,12 +41,18 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash());
 
+require('./config/passport')(passport, auth);
+
+
+
 var routes = require('./routes/index');
 var users = require('./routes/user');
 var clubs = require('./routes/club/');
 app.use('/', routes);
 app.use('/', users);
 app.use('/club', clubs);
+
+
 
 
 // catch 404 and forward to error handler

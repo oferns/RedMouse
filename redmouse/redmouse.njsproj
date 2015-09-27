@@ -31,10 +31,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="config\passport.js" />
     <Compile Include="routes\club\index.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="bin\www" />
     <Compile Include="routes\user.js" />
+    <Compile Include="services\Auth.js" />
     <Compile Include="services\DocDB.js" />
     <Content Include="package.json" />
     <Content Include="public\android-chrome-144x144.png" />
@@ -94,6 +96,7 @@
     <Content Include="settings.json" />
     <Content Include="views\club\index.jade" />
     <Content Include="views\club\layout.jade" />
+    <Content Include="views\profile.jade" />
     <Content Include="views\index.jade" />
     <Content Include="views\layout.jade" />
     <Content Include="views\error.jade" />
@@ -101,6 +104,7 @@
   <ItemGroup>
     <Folder Include="bin\" />
     <Folder Include="config\" />
+    <Folder Include="models\" />
     <Folder Include="services\" />
     <Folder Include="public\" />
     <Folder Include="public\images\" />
