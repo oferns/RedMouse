@@ -13,7 +13,7 @@ function DocDB(options) {
     self.isReady = false;
     
     self.readOrCreateDatabase(self.databaseId, function (e, db) {
-       // debugger;
+        // debugger;
         if (e) {
             console.log(e);
             throw e;
@@ -21,7 +21,6 @@ function DocDB(options) {
         
         self.db = db;
         
-
         self.readOrCreateCollection(self.db._self, self.collectionId, function (e, collection) {
             if (!e) {
                 self.collection = collection;
@@ -153,21 +152,7 @@ DocDB.prototype.readOrCreateCollection = function (database, collectionId, callb
                 });
 
             } else {
-                self.client.deleteCollection(results[0]._self, requestOptions, function (err, deleted) {
-                    if (err) {
-                        console.log(err);
-                        throw err;
-                    }
-                    self.client.createCollection(database, collectionSpec, requestOptions, function (err, created) {
-                        if (err) {
-                            console.log(err);
-                            throw err;
-                        }
-                        callback(null, created);
-                    });
-                });
-
-//                callback(null, results[0]);
+                callback(null, results[0]);
             }
         }
     });
