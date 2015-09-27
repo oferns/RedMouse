@@ -2372,6 +2372,26 @@ body {
 #login:last-child {
   margin-right: 0%;
 }
+#sociallogin {
+  *zoom: 1;
+  float: left;
+  clear: none;
+  text-align: inherit;
+  width: 48.5%;
+  margin-left: 0%;
+  margin-right: 3%;
+}
+#sociallogin:before,
+#sociallogin:after {
+  content: '';
+  display: table;
+}
+#sociallogin:after {
+  clear: both;
+}
+#sociallogin:last-child {
+  margin-right: 0%;
+}
 #footer {
   position: fixed;
   bottom: 0;

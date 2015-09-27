@@ -25,7 +25,7 @@ Auth.prototype.encryptPassword = function (password, salt) {
 Auth.prototype.getAccount = function (userId, callback) {
     var self = this;
     
-    self.docDB.getItem('select * from root r where r.userId = "' + userId + '"', function (e, user) {
+    self.docDB.getItem('select * from root r where r.id = "' + userId + '"', function (e, user) {
         if (!user) {
             return callback(e);
         }
@@ -65,9 +65,9 @@ Auth.prototype.isAdmin = function (id, callback) {
     });
 };
 
-Auth.prototype.providerLogin = function (userinfo, callback) {
+Auth.prototype.providerLogin = function (userinfo, callback) {    
     var self = this;
-    
+    debugger;
     self.docDB.getItem('select * from root r where r.providers.' + userinfo.provider + ' = "' + userinfo.providerId + '"', function (e, user) {
         if (user) {
             return callback(e, user);
@@ -110,7 +110,7 @@ Auth.prototype.createUser = function (data, callback) {
     }
     
     user.providers[data.provider] = data.providerId;
-    
+    debugger;
     if (data.password) {
         user.salt = self.makeSalt();
         user.password = self.encryptPassword(data.password, user.salt);

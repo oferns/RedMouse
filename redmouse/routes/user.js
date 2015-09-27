@@ -28,6 +28,20 @@ router.get('/logout', isLoggedIn, function (req, res) {
     res.redirect('/');
 });
 
+
+router.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
+
+router.get('/auth/facebook/callback',
+        passport.authenticate('facebook', {
+    successRedirect : '/profile',
+    failureRedirect : '/'
+}));
+
+router.get('/auth/facebook/deauth', function (req, res) {
+    debugger; 
+});
+
+
 router.post('/register', passport.authenticate('local-signup', {
     successRedirect : '/profile',
     failureRedirect : '/register',

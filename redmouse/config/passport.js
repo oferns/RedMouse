@@ -1,6 +1,7 @@
 ﻿
 
 var LocalStrategy = require('passport-local').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
 
 
 module.exports = function (passport, auth) {
@@ -13,11 +14,11 @@ module.exports = function (passport, auth) {
     
     // used to serialize the user for the session
     passport.serializeUser(function (user, done) {
-        done(null, user.userId);
+        done(null, user.id);
     });
     
     // used to deserialize the user
-    passport.deserializeUser(function (id, done) {        
+    passport.deserializeUser(function (id, done) {
         auth.getAccount(id, function (err, user) {
             done(err, user);
         });
@@ -38,7 +39,7 @@ module.exports = function (passport, auth) {
    function (req, email, password, done) {
         
         process.nextTick(function () {
-            auth.register({ "email": email, "password": password}, function (err, user) {
+            auth.register({ "email": email, "password": password }, function (err, user) {
                 if (err) {
                     return done(null, false, req.flash('signupMessage', err));
                 }
@@ -68,5 +69,27 @@ module.exports = function (passport, auth) {
                 return done(null, user, req.flash('signinMessage', 'Login Successful'));
             });
         });
-    }))
+    })),
+
+    // =========================================================================
+    // FACEBOOK ================================================================
+    // =========================================================================
+    passport.use(new FacebookStrategy({
+        clientID        : auth.providers.facebookAuth.clientID,
+        clientSecret    : auth.providers.facebookAuth.clientSecret,
+        callbackURL     : auth.providers.facebookAuth.callbackURL
+    },
+
+    // facebook will send back the token and profile
+    function (token, refreshToken, profile, done) {
+        // asynchronous
+        process.nextTick(function () {
+            auth.providerLogin({
+                name: profile.displayName, 
+                email: profile.emails, 
+                provider: 'facebook', 
+                providerId: profile.id
+            }, done);
+        });
+    }));
 }
