@@ -13,7 +13,6 @@ function DocDB(options) {
     self.isReady = false;
     
     self.readOrCreateDatabase(self.databaseId, function (e, db) {
-        // debugger;
         if (e) {
             console.log(e);
             throw e;
@@ -46,7 +45,6 @@ DocDB.prototype.updateItem = function (item, callback) {
 */ 
 DocDB.prototype.getItem = function (query, callback) {
     var self = this;
-    
     self.client.queryDocuments(self.collection._self, query).toArray(function (err, results) {
         if (err || results.length == 0) {
             return callback(err);

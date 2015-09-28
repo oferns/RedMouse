@@ -8,7 +8,7 @@
   "description": "redmouse",
   "author": {
     "name": "admin",
-    "email": ""
+    "email": "oferns@gmail.com"
   },
   "dependencies": {
     "async": "^1.4.2",
@@ -30,7 +30,10 @@
     "method-override": "^2.3.5",
     "morgan": "~1.3.0",
     "passport": "^0.3.0",
+    "passport-facebook": "^2.0.0",
+    "passport-google-oauth": "^0.2.0",
     "passport-local": "^1.0.0",
+    "passport-twitter": "^1.0.3",
     "rupture": "^0.6.1",
     "serve-favicon": "~2.1.3",
     "stylus": "~0.52.4"

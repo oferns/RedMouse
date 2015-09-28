@@ -33,17 +33,31 @@ app.use(session({
     name: 'palmers',
     proxy: true,
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 60000,
+        secure: false
+    }
 }));
+
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash());
 
+app.use(function (req, res, next) {
+    res.locals.flash = {
+        success: req.flash('success'),
+        info: req.flash('info'),
+        warning: req.flash('warning'), 
+        error: req.flash('error')
+    }
+    
+    next()
+});
+
 require('./config/passport')(passport, auth);
-
-
 
 var routes = require('./routes/index');
 var users = require('./routes/user');
@@ -51,6 +65,8 @@ var clubs = require('./routes/club/');
 app.use('/', routes);
 app.use('/', users);
 app.use('/club', clubs);
+
+
 
 
 

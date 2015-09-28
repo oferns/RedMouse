@@ -96,6 +96,7 @@
     <Content Include="settings.json" />
     <Content Include="views\club\index.jade" />
     <Content Include="views\club\layout.jade" />
+    <Content Include="views\partials\_flash.jade" />
     <Content Include="views\profile.jade" />
     <Content Include="views\index.jade" />
     <Content Include="views\layout.jade" />
@@ -104,7 +105,6 @@
   <ItemGroup>
     <Folder Include="bin\" />
     <Folder Include="config\" />
-    <Folder Include="models\" />
     <Folder Include="services\" />
     <Folder Include="public\" />
     <Folder Include="public\images\" />

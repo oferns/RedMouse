@@ -7,7 +7,7 @@ var DocDB = require('./docdb.js');
 
 
 function Auth(options) {
-    var self = this;    
+    var self = this;
     self.docDB = new DocDB(options.docDb);
     self.providers = options.authproviders;
 }
@@ -22,103 +22,96 @@ Auth.prototype.encryptPassword = function (password, salt) {
     return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
 };
 
-Auth.prototype.getAccount = function (userId, callback) {
+Auth.prototype.getAccount = function (id, callback) {
     var self = this;
     
-    self.docDB.getItem('select * from root r where r.id = "' + userId + '"', function (e, user) {
+    self.docDB.getItem('select * from root r where r.id = "' + id + '"', function (e, user) {
         if (!user) {
-            return callback(e);
+            return callback(e, userId);
         }
-        
-        return callback(e, user.profile);
+        return callback(e, user);
     });
 };
 
-Auth.prototype.authenticate = function (userId, password, callback) {
+Auth.prototype.providerLogin = function (profile, callback) {
     var self = this;
-    
-    self.docDB.getItem('select * from root r where r.userId = "' + userId + '"', function (e, user) {
-        if (e || !user) {
-            if (!user) {
-                return callback('Invalid User');
+    self.getAccountByProvider(profile, function (err, user) {
+        if (err) {
+            return callback(err);
+        }
+             
+        if (profile.provider === 'Local') {
+            if (user) {
+                if (self.encryptPassword(profile.password, user.local.salt) === user.local.password) {
+                    return callback(null, user);
+                }
             }
-            return callback(e);
+            return callback('Invalid Credentials!');
         }
         
-        if (self.encryptPassword(password, user.salt) === user.password) {
-            return callback(null, user.profile);
-        }
-        else {
-            return callback('Invalid password');
-        }
-    });
-};
-
-Auth.prototype.isAdmin = function (id, callback) {
-    var self = this;
-    
-    self.docDB.getItem('select * from root r where r.userId = "' + id + '"', function (e, user) {
-        if (user && user.admin === true) {
-            return callback(true);
-        }
-        return callback(false);
-    });
-};
-
-Auth.prototype.providerLogin = function (userinfo, callback) {    
-    var self = this;
-    debugger;
-    self.docDB.getItem('select * from root r where r.providers.' + userinfo.provider + ' = "' + userinfo.providerId + '"', function (e, user) {
         if (user) {
-            return callback(e, user);
+            return callback(null, user);
         }
         
         //create a new user                
-        self.createUser(userinfo, function (e, user) {
-            return callback(e, user);
+        self.createUser(profile, function (err, user) {
+            return callback(err, user);
         });
     });
 
 };
 
-Auth.prototype.register = function (data, callback) {
+Auth.prototype.getAccountById = function (userId, callback) {
+    var self = this;
+    self.docDB.getItem('select * from root r where r.id = "' + userId + '"', function (err, user) {
+        if (err) {
+            return callback(err, userId);
+        }
+        
+        return callback(null, user);
+    });
+};
+
+Auth.prototype.getAccountByProvider = function (profile, callback) {
+    var self = this;
+    self.docDB.getItem('select * from root r where r.' + profile.provider + '.providerId = "' + profile.providerId + '"', function (err, user) {
+        if (err) {
+            return callback(err, profile);
+        }
+
+        return callback(null, user);
+    });
+};
+
+Auth.prototype.register = function (profile, callback) {
     var self = this;
     
-    self.getAccount(data.email, function (e, user) {
+    self.getAccountByProvider(profile, function (e, user) {
+
         if (user) {
             return callback('A user with this email already exists');
         }
         
-        data.provider = 'local';
-        data.providerId = data.email;
-                
         //create a new user                
-        self.createUser(data, function (e, user) {
+        self.createUser(profile, function (e, user) {
             callback(e, user);
         });
     });
 
 };
 
-Auth.prototype.createUser = function (data, callback) {
+Auth.prototype.createUser = function (profile, callback) {
     var self = this;
     
-    var user = {
-        userId: data.email,
-        providers: {},
-        profile: { userId: data.email, name: data.name, email: data.email }
+    if (profile.password) {
+        profile.salt = self.makeSalt();
+        profile.password = self.encryptPassword(profile.password, profile.salt);
     }
+
+    var json = {};
+    json[profile.provider] = profile;
     
-    user.providers[data.provider] = data.providerId;
-    debugger;
-    if (data.password) {
-        user.salt = self.makeSalt();
-        user.password = self.encryptPassword(data.password, user.salt);
-    }
-    
-    self.docDB.addItem(user, function (e, user) {
-        return callback(e, user);
-    });
+    self.docDB.addItem(json, callback);
 };
 
 Auth.prototype.updateUser = function (data, callback) {

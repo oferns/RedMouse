@@ -5,69 +5,74 @@ var passport = require('passport');
 
 router.get("/login", function (req, res) {
     res.render('login', {
-        title: 'Log In', message: req.flash('loginMessage')
+        title: 'Log In'
     });
 });
 
 // show the register form
-router.get('/register', function (req, res) {    
+router.get('/register', function (req, res) {
     // render the page and pass in any flash data if it exists
-    res.render('register', { message: req.flash('signupMessage') });
+    res.render('register');
 });
 
 router.get('/profile', isLoggedIn, function (req, res) {
     res.render('profile', {
         user : req.user, // get the user out of session and pass to template
-        message: req.flash('signupMessage')
     });
 });
 
 router.get('/logout', isLoggedIn, function (req, res) {
     req.logout();
-    req.flash('logoutMessage', 'You have been logged out');
+    req.flash('info', 'You have been logged out');
     res.redirect('/');
 });
 
-
 router.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
 
-router.get('/auth/facebook/callback',
-        passport.authenticate('facebook', {
+router.get('/auth/facebook/callback', passport.authenticate('facebook', {
     successRedirect : '/profile',
-    failureRedirect : '/'
+    failureRedirect : '/login'
 }));
 
 router.get('/auth/facebook/deauth', function (req, res) {
-    debugger; 
+    debugger;
 });
 
 
-router.post('/register', passport.authenticate('local-signup', {
+router.get('/auth/google', passport.authenticate('google', { scope : 'email' }));
+
+router.get('/auth/google/callback', passport.authenticate('google', {
     successRedirect : '/profile',
-    failureRedirect : '/register',
-    failureFlash : true, 
-    successFlash : true
+    failureRedirect : '/login'
+}));
+
+router.get('/auth/twitter', passport.authenticate('twitter'));
+
+// handle the callback after twitter has authenticated the user
+router.get('/auth/twitter/callback', passport.authenticate('twitter', {
+    successRedirect : '/profile',
+    failureRedirect : '/login'
+}));
+
+
+router.post('/register', passport.authenticate('local-signup', {
+    successRedirect : '/profile', // redirect to the secure profile section
+    failureRedirect : '/login', // redirect back to the signup page if there is an error
 }));
 
 
 router.post('/login', passport.authenticate('local-login', {
     successRedirect : '/profile', // redirect to the secure profile section
     failureRedirect : '/login', // redirect back to the signup page if there is an error
-    failureFlash : true // allow flash messages
 }));
 
-
-
-
-
 function isLoggedIn(req, res, next) {
-    
     // if user is authenticated in the session, carry on 
     if (req.isAuthenticated())
         return next();
     
     // if they aren't redirect them to the home page
-    res.redirect('/');
+    res.redirect('/login');
 }
 
 module.exports = router;
