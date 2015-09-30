@@ -1,6 +1,6 @@
 ﻿'use strict';
 
-var util = require('util');
+var u = require('util');
 var async = require('async');
 var Documentclient = require('documentdb').DocumentClient;
 
@@ -46,10 +46,18 @@ DocDB.prototype.updateItem = function (item, callback) {
 DocDB.prototype.getItem = function (query, callback) {
     var self = this;
     self.client.queryDocuments(self.collection._self, query).toArray(function (err, results) {
-        if (err || results.length == 0) {
+        if (err) {
             return callback(err);
         }
+
+        if(results.length == 0) {
+            return callback(null, null);
+        }
         
+        if (results.length > 1) {
+            return callback(u.format('Warning: %d results returned. Expected 1 or 0.', results.length, results));
+        }
+
         return callback(null, results[0]);
     });
 };
@@ -77,7 +85,7 @@ DocDB.prototype.removeItem = function (item, callback) {
     var self = this;
     
     self.client.deleteDocument(item, function (e) {
-        return callback(e);
+        return callback(err, item);
     });
 };
 

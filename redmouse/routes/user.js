@@ -2,17 +2,23 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
+var csrf = require('csurf');
 
-router.get("/login", function (req, res) {
+var csrfProtection = csrf({ cookie: true });
+
+
+router.get("/login", csrfProtection, function (req, res) {
     res.render('login', {
-        title: 'Log In'
+        title: 'Log In',
+        user: req.user,
+        csrfToken: req.csrfToken()
     });
 });
 
 // show the register form
-router.get('/register', function (req, res) {
+router.get('/register', csrfProtection, function (req, res) {
     // render the page and pass in any flash data if it exists
-    res.render('register');
+    res.render('register', { csrfToken: req.csrfToken() });
 });
 
 router.get('/profile', isLoggedIn, function (req, res) {
@@ -55,15 +61,17 @@ router.get('/auth/twitter/callback', passport.authenticate('twitter', {
 }));
 
 
-router.post('/register', passport.authenticate('local-signup', {
+router.post('/register', csrfProtection, passport.authenticate('local-signup', {
     successRedirect : '/profile', // redirect to the secure profile section
     failureRedirect : '/login', // redirect back to the signup page if there is an error
 }));
 
 
-router.post('/login', passport.authenticate('local-login', {
+router.post('/login', csrfProtection, passport.authenticate('local-login', {
     successRedirect : '/profile', // redirect to the secure profile section
     failureRedirect : '/login', // redirect back to the signup page if there is an error
+    failureFlash : true, // allow flash messages
+    successFlash: true
 }));
 
 function isLoggedIn(req, res, next) {

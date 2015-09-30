@@ -36,18 +36,21 @@ module.exports = function (passport, auth) {
         passReqToCallback : true // allows us to pass back the entire request to the callback
     },    
    function (req, email, password, done) {
+        
+        var profile = { // Define our profile
+            providerId: email, 
+            password: password,
+            provider: 'Local',
+            email: email,
+            providerProfile: {}
+        };
+        
         process.nextTick(function () {
-            auth.register({
-                providerId: email, 
-                password: password,
-                provider: 'local',
-                email: email,
-                emailConfirmed: false
-            }, function (err, user) {
+            auth.register(profile, function (err, user) {
                 if (!err) {
                     req.flash('success', 'Registration succeeded!');
                     req.user = user;
-                    return done(null, user)
+                    return done(null, req.user)
                 }
                 req.flash('warning', 'Registration failed!');
                 return done(err, false);
@@ -68,21 +71,25 @@ module.exports = function (passport, auth) {
     },
 
     function (req, email, password, done) { // callback with email and password from our form
-        process.nextTick(function () {
-            auth.providerLogin({
+      process.nextTick(function () {
+                                  
+            var profile = { // Define our profile
                 providerId: email, 
                 password: password,
                 provider: 'Local',
                 email: email,
                 providerProfile: {}
-            }, function (err, user) {
-                if (!err) {
-                    req.flash('success', 'Login succeeded!');
-                    req.user = user;
-                    return done(null, user)
+            };
+                                   
+            auth.login(req.user, profile, function (err, account) {
+                if (err) { // If we flunked out..
+                    req.flash('warning', 'Login failed!'); // ..let the user know something went wrong..
+                    return done(null, false); // ..and return immediately.
                 }
-                req.flash('warning', 'Login failed!');
-                return done(err, false);
+                                                
+                req.flash('success', 'Login succeeded!');
+                req.user = account;
+                return done(null, req.user)
             });
         });
     })),
@@ -94,14 +101,15 @@ module.exports = function (passport, auth) {
         clientID        : auth.providers.facebookAuth.clientID,
         clientSecret    : auth.providers.facebookAuth.clientSecret,
         callbackURL     : auth.providers.facebookAuth.callbackURL,
-        passReqToCallback : true
-
+        passReqToCallback : true,
+        enableProof: true
     },
 
     // facebook will send back the token and profile
     function (req, token, refreshToken, profile, done) {
         process.nextTick(function () {
-            auth.providerLogin({
+            
+            var newprofile = {
                 name: profile.displayName, 
                 email: profile.emails, 
                 provider: 'Facebook', 
@@ -109,14 +117,21 @@ module.exports = function (passport, auth) {
                 token: token,
                 refreshToken: refreshToken,
                 providerProfile: profile
-            }, function (err, user) {
+            }; 
+            
+            auth.login(req.user, newprofile , function (err, user) {
+                if (err) {
+                    done(err);
+                }
+
                 if (!err) {
                     req.flash('success', 'Login succeeded!');
                     req.user = user;
                     return done(null, user)
                 }
+
                 req.flash('warning', 'Login failed!');
-                return done(err, false);
+                return done(null, false);
             });
         });
     })),
@@ -133,23 +148,25 @@ module.exports = function (passport, auth) {
 
     function (req, token, refreshToken, profile, done) {
         
+        var newprofile = {
+            name: profile.displayName, 
+            email: profile.emails, 
+            provider: 'Google', 
+            providerId: profile.id,
+            token: token,
+            refreshToken: refreshToken,
+            providerProfile: profile
+        };
+
         process.nextTick(function () {
-            auth.providerLogin({
-                name: profile.displayName, 
-                email: profile.emails, 
-                provider: 'Google', 
-                providerId: profile.id,
-                token: token,
-                refreshToken: refreshToken,
-                providerProfile: profile
-            }, function (err, user) {
+            auth.login(newprofile, function (err, user) {
                 if (!err) {
                     req.flash('success', 'Login succeeded!');
                     req.user = user;
                     return done(null, user)
                 }
                 req.flash('warning', 'Login failed!');
-                return done(err, false);
+                return done(null, false);
             });
         });
     }));
@@ -167,7 +184,7 @@ module.exports = function (passport, auth) {
     function (req, token, tokenSecret, profile, done) {
         
         process.nextTick(function () {
-            auth.providerLogin({
+            auth.login({
                 name: profile.displayName, 
                 email: profile.emails, 
                 provider: 'Twitter', 
@@ -177,12 +194,11 @@ module.exports = function (passport, auth) {
                 providerProfile: profile
             }, function (err, user) {
                 if (!err) {
-                    req.flash('success', 'Login succeeded!');
                     req.user = user;
-                    return done(null, user)
+                    return done(null, user, { message: 'Login succeeded!'} )
                 }
-                req.flash('warning', 'Login failed!');
-                return done(err, false);
+
+                return done(null, false, { message: 'Login failed!' });
             });
         });
     }));

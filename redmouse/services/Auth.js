@@ -1,5 +1,9 @@
 ﻿'use strict';
 
+var GET_BY_ID = 'SELECT * FROM root r WHERE r.id = "%s"';
+var GET_BY_PROFILE_ID = 'SELECT * FROM root r WHERE r.%s.providerId = "%s"';
+
+var u = require('util')
 var async = require('async');
 var crypto = require('crypto');
 
@@ -22,50 +26,89 @@ Auth.prototype.encryptPassword = function (password, salt) {
     return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
 };
 
-Auth.prototype.getAccount = function (id, callback) {
+Auth.prototype.login = function (account, profile, callback) {
     var self = this;
-    
-    self.docDB.getItem('select * from root r where r.id = "' + id + '"', function (e, user) {
-        if (!user) {
-            return callback(e, userId);
+    if (account) { // Already Logged in
+        
+        account[profile.provider] = profile; // Add/replace the account profile                                
+
+        if (profile.provider == 'Local') { // Local profile login...check password            
+            if (self.encryptPassword(profile.password, account.local.salt) === account.local.password) {
+                self.updateAccount(account, function (err, account) { // Save the account
+                    return callback(null, account); // Return the account                
+                });                                
+            }
+            return callback('Invalid Credentials!', profile); // Password was wrong
         }
-        return callback(e, user);
+        
+        // Else social login
+        self.updateAccount(account, function (err, account) { // Save the account
+            return callback(null, account); // Return the account                
+        });
+
+    }
+    
+    // Not logged in yet
+    self.getAccountByProvider(profile, function (err, account) { // Find the account
+        if (err) { // If there was an error retrieving the account
+            return callback(err, account || profile); // Bomb out
+        }
+
+        if (profile.provider == 'Local') { // If the provider is local
+            if (account) { // and if we found an account
+                if (self.encryptPassword(profile.password, account.Local.salt) === account.Local.password) { // then check the password
+                    return callback(null, account); // and return the account
+                }
+            }
+            return callback('Invalid Credentials!', account || profile); // else password was wrong
+        }
+        
+        if (account) { // If we found an account its not a local account then already auth'd
+            return callback(null, account); // so return the account
+        }
+        
+        // Else we have a new login, and so we should register
+        self.register(profile, function (err, account) {
+            return callback(err, account);
+        });
     });
 };
 
-Auth.prototype.providerLogin = function (profile, callback) {
+Auth.prototype.register = function (profile, callback) {
     var self = this;
-    self.getAccountByProvider(profile, function (err, user) {
+    
+    self.getAccountByProvider(profile, function (err, account) {
         if (err) {
-            return callback(err);
-        }
-             
-        if (profile.provider === 'Local') {
-            if (user) {
-                if (self.encryptPassword(profile.password, user.local.salt) === user.local.password) {
-                    return callback(null, user);
-                }
-            }
-            return callback('Invalid Credentials!');
+            return callback(err, account || profile)
         }
         
-        if (user) {
-            return callback(null, user);
+        if (account) {
+            return callback('User already exists', account);
         }
         
-        //create a new user                
-        self.createUser(profile, function (err, user) {
-            return callback(err, user);
+        var newUser = {};
+        newUser[profile.provider] = profile;
+        
+        if (newUser.Local) {
+            newUser.Local.salt = self.makeSalt();
+            newUser.Local.password = self.encryptPassword(newUser.Local.password, newUser.Local.salt);
+        }
+        
+        //create a new account               
+        self.docDB.addItem(newUser, function (err, item) {
+            callback(err, item || newUser);
         });
     });
 
 };
 
-Auth.prototype.getAccountById = function (userId, callback) {
+Auth.prototype.getAccountById = function (id, callback) {
     var self = this;
-    self.docDB.getItem('select * from root r where r.id = "' + userId + '"', function (err, user) {
+    var query = u.format(GET_BY_ID, id);
+    
+    self.docDB.getItem(query, function (err, user) {
         if (err) {
-            return callback(err, userId);
+            return callback(err, user || id);
         }
         
         return callback(null, user);
@@ -74,88 +117,37 @@ Auth.prototype.getAccountById = function (userId, callback) {
 
 Auth.prototype.getAccountByProvider = function (profile, callback) {
     var self = this;
-    self.docDB.getItem('select * from root r where r.' + profile.provider + '.providerId = "' + profile.providerId + '"', function (err, user) {
+    var query = u.format(GET_BY_PROFILE_ID, profile.provider, profile.providerId)
+    
+    self.docDB.getItem(query, function (err, account) {
         if (err) {
-            return callback(err, profile);
-        }
-
-        return callback(null, user);
-    });
-};
-
-Auth.prototype.register = function (profile, callback) {
-    var self = this;
-    
-    self.getAccountByProvider(profile, function (e, user) {
-
-        if (user) {
-            return callback('A user with this email already exists');
+            return callback(err, account || profile);
         }
         
-        //create a new user                
-        self.createUser(profile, function (e, user) {
-            callback(e, user);
-        });
+        return callback(null, account);
     });
-
 };
 
-Auth.prototype.createUser = function (profile, callback) {
-    var self = this;
-    
-    if (profile.password) {
-        profile.salt = self.makeSalt();
-        profile.password = self.encryptPassword(profile.password, profile.salt);
-    }
 
-    var json = {};
-    json[profile.provider] = profile;
-    
-    self.docDB.addItem(json, callback);
+Auth.prototype.updateAccount = function (account, callback) {
+    var self = this;
+    self.docDB.updateItem(account, function (e, user) {
+        callback(e, user);
+    });
 };
 
-Auth.prototype.updateUser = function (data, callback) {
+Auth.prototype.removeAccount = function (id, callback) {
     var self = this;
     
-    self.getAccount(data.userId, function (e, user) {
+    self.docDB.getItem('select * from root r where r.id = "' + id + '"', function (e, user) {
         if (e || !user) {
-            return callback('error updating user');
+            return callback(e, user || id);
         }
         
-        //check for changed password
-        if (data.newPassword && data.password && encryptPassword(data.password, user.salt) === user.password) {
-            user.providers.salt = self.makeSalt();
-            user.providers.local = self.encryptPassword(data.newPassword, user.providers.salt);
-        }
-        
-        user.profile = data.profile;
-        user.profile.userId = user.userId;
-        
-        //update a new user                
-        self.docDB.updateItem(user, function (e) {
-            callback(e, user);
+        self.docDB.removeItem(user, function (err, item) {
+            return callback(err, item);
         });
     });
 };
-
-Auth.prototype.removeAccount = function (userId, callback) {
-    var self = this;
-    
-    if (userId === 'admin') {
-        callback('Error: You cannot delete the admin account');
-    }
-    
-    self.docDB.getItem('select * from root r where r.userId = "' + userId + '"', function (e, user) {
-        if (e || !user) {
-            return callback(e);
-        }
-        
-        self.docDB.removeItem(user, function (e) {
-            return callback(e);
-        });
-    });
-};
-
-
 
 module.exports = Auth;

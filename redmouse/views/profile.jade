@@ -3,8 +3,8 @@
 block content
     .subcontainer
         h1 Profile
-        - if (user.local != 'undefined')
-            p user.local                
+        - if (user.Local)
+            p=user.Local
         p
             a(href='/logout') logout
 block footer

@@ -3,20 +3,22 @@
     p
         span.fa.fa-gavel
             =m
+
 - if (flash && flash.info && flash.info.length > 0)
   each m in flash.info
     p
         span.fa.fa-gavel
             =m
 
-  - if (flash && flash.warning && flash.warning.length > 0)
+- if (flash && flash.warning && flash.warning.length > 0)
   each m in flash.warning
     p
         span.fa.fa-gavel
             =m
 
-  - if (flash && flash.error && flash.error.length > 0)
+- if (flash && flash.error && flash.error.length > 0)
   each m in flash.error 
     p
         span.fa.fa-gavel
             =m
+

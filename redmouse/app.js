@@ -11,13 +11,15 @@ var flash = require('connect-flash');
 var Auth = require('./services/Auth');
 var app = express();
 
+
+
 var config = fs.readFileSync('./settings.json');
 
 var settings = JSON.parse(config);
 
 var auth = new Auth(settings);
 
-var accessLogStream = fs.createWriteStream(__dirname + '/access.log', { flags: 'a' })
+var accessLogStream = fs.createWriteStream(__dirname + '/access.log', { flags: 'a' });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -65,9 +67,6 @@ var clubs = require('./routes/club/');
 app.use('/', routes);
 app.use('/', users);
 app.use('/club', clubs);
-
-
-
 
 
 
