@@ -14,6 +14,27 @@ function Auth(options) {
     var self = this;
     self.docDB = new DocDB(options.docDb);
     self.providers = options.authproviders;
+    // Atomic Merge accounts
+    // 
+    self.docDB.createStoredProcedureAsync(collection._self, {
+        name: "mergeAccounts",
+        body: function (masterAccountId, childAccountId) { // profileId = The Master profile receiving the childId profile
+            
+            var context = getContext();
+            var collection = context.getCollection();
+            var response = context.getResponse();
+            
+            
+            var masterAccount = collection.queryDocuments()
+
+        }
+   
+    
+    }).then(function (response) {
+        self.= response.resource;
+    });
+
+
 }
 
 Auth.prototype.makeSalt = function () {
@@ -28,23 +49,38 @@ Auth.prototype.encryptPassword = function (password, salt) {
 
 Auth.prototype.login = function (account, profile, callback) {
     var self = this;
+    
     if (account) { // Already Logged in
         
-        account[profile.provider] = profile; // Add/replace the account profile                                
-
-        if (profile.provider == 'Local') { // Local profile login...check password            
-            if (self.encryptPassword(profile.password, account.local.salt) === account.local.password) {
-                self.updateAccount(account, function (err, account) { // Save the account
-                    return callback(null, account); // Return the account                
-                });                                
-            }
-            return callback('Invalid Credentials!', profile); // Password was wrong
+        if (account[profile.provider]) { // If the account already has the type of profile logging in with
+            return callback('account already has a profile of this type', account);
         }
         
-        // Else social login
-        self.updateAccount(account, function (err, account) { // Save the account
-            return callback(null, account); // Return the account                
+        self.getAccountByProvider(profile, function (err, existingaccount) { // See if we already have an account with this profile
+            if (err) { // If the db call went wrong
+                return callback(err, account);
+            }
+            
+            if (existingaccount) { // if this profile is already known
+                self.client.executeStoredProcedureAsync(createdStoredProcedure._self, {masterAccountId: account.id, childAccountId: existingaccount.id });
+            }
+
+            account[profile.provider] = profile; // Add/replace the account profile we are logging in with                                
+            
+            if (profile.provider === 'Local') { // Local profile login...check password            
+                if (self.encryptPassword(profile.password, account.local.salt) != account.local.password) { // Password was wrong
+                    return callback('Invalid Credentials!', account);
+                }
+            }
+            
+            // Else social login & lets update the profile
+            self.updateAccount(account, function (err, account) { // Save the account
+                return callback(null, account); // Return the account                
+            });
+
+        
         });
+                
 
     }
     
@@ -99,7 +135,6 @@ Auth.prototype.register = function (profile, callback) {
             callback(err, item || newUser);
         });
     });
-
 };
 
 Auth.prototype.getAccountById = function (id, callback) {

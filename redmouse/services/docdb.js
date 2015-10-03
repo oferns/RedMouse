@@ -29,6 +29,7 @@ function DocDB(options) {
             }
         });
     });
+
 };
 
 DocDB.prototype.updateItem = function (item, callback) {
