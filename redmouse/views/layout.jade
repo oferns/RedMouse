@@ -31,13 +31,15 @@ html(lang="en")
   body
   #container
     #nav
-        include ./partials/_nav
+        a(href='./')
+            img(src='/images/logo.gif',alt='redmouse',id='logo')
+        include ./_nav
     
-    include ./partials/_flash
+    include ./_flash
 
     block header
-    #container    
-        #content
-            block content
+    #content
+        block content
+    
     #footer
         block footer

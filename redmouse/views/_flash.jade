@@ -1,24 +1,24 @@
 ﻿- if (flash && flash.success && flash.success.length > 0)
   each m in flash.success 
-    p
+    p.success
         span.fa.fa-gavel
             =m
 
 - if (flash && flash.info && flash.info.length > 0)
   each m in flash.info
-    p
+    p.info
         span.fa.fa-gavel
             =m
 
 - if (flash && flash.warning && flash.warning.length > 0)
   each m in flash.warning
-    p
+    p.warn
         span.fa.fa-gavel
             =m
 
 - if (flash && flash.error && flash.error.length > 0)
   each m in flash.error 
-    p
+    p.error
         span.fa.fa-gavel
             =m
 

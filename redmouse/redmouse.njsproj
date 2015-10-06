@@ -32,12 +32,21 @@
   <ItemGroup>
     <Compile Include="app.js" />
     <Compile Include="config\passport.js" />
+    <Compile Include="gulpfile.js" />
     <Compile Include="routes\club\index.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="bin\www" />
     <Compile Include="routes\user.js" />
     <Compile Include="services\Auth.js" />
     <Compile Include="services\DocDB.js" />
+    <Compile Include="tests\funcional\root.js">
+      <SubType>Code</SubType>
+      <TestFramework>Mocha</TestFramework>
+    </Compile>
+    <Compile Include="tests\unit\auth.js">
+      <SubType>Code</SubType>
+      <TestFramework>Mocha</TestFramework>
+    </Compile>
     <Content Include="package.json" />
     <Content Include="public\android-chrome-144x144.png" />
     <Content Include="public\android-chrome-192x192.png" />
@@ -45,6 +54,23 @@
     <Content Include="public\android-chrome-48x48.png" />
     <Content Include="public\android-chrome-72x72.png" />
     <Content Include="public\android-chrome-96x96.png" />
+    <Content Include="public\android-icon-144x144.png" />
+    <Content Include="public\android-icon-192x192.png" />
+    <Content Include="public\android-icon-36x36.png" />
+    <Content Include="public\android-icon-48x48.png" />
+    <Content Include="public\android-icon-72x72.png" />
+    <Content Include="public\android-icon-96x96.png" />
+    <Content Include="public\apple-icon-114x114.png" />
+    <Content Include="public\apple-icon-120x120.png" />
+    <Content Include="public\apple-icon-144x144.png" />
+    <Content Include="public\apple-icon-152x152.png" />
+    <Content Include="public\apple-icon-180x180.png" />
+    <Content Include="public\apple-icon-57x57.png" />
+    <Content Include="public\apple-icon-60x60.png" />
+    <Content Include="public\apple-icon-72x72.png" />
+    <Content Include="public\apple-icon-76x76.png" />
+    <Content Include="public\apple-icon-precomposed.png" />
+    <Content Include="public\apple-icon.png" />
     <Content Include="public\apple-touch-icon-114x114.png" />
     <Content Include="public\apple-touch-icon-120x120.png" />
     <Content Include="public\apple-touch-icon-144x144.png" />
@@ -58,7 +84,6 @@
     <Content Include="public\apple-touch-icon.png" />
     <Content Include="public\browserconfig.xml" />
     <Content Include="public\favicon-16x16.png" />
-    <Content Include="public\favicon-194x194.png" />
     <Content Include="public\favicon-32x32.png" />
     <Content Include="public\favicon-96x96.png" />
     <Content Include="public\favicon.ico" />
@@ -68,12 +93,14 @@
     <Content Include="public\fonts\fontawesome-webfont.woff" />
     <Content Include="public\fonts\fontawesome-webfont.woff2" />
     <Content Include="public\fonts\FontAwesome.otf" />
+    <Content Include="public\images\logo.gif" />
     <Content Include="public\images\rm-114.gif" />
     <Content Include="public\images\rm-120.gif" />
     <Content Include="public\images\rm-144.gif" />
     <Content Include="public\images\rm-152.gif" />
     <Content Include="public\images\rm-180.gif" />
     <Content Include="public\images\rm-192.gif" />
+    <Content Include="public\images\rm-260.gif" />
     <Content Include="public\images\rm-36.gif" />
     <Content Include="public\images\rm-48.gif" />
     <Content Include="public\images\rm-57.gif" />
@@ -82,21 +109,23 @@
     <Content Include="public\images\rm-76.gif" />
     <Content Include="public\images\rm-96.gif" />
     <Content Include="public\manifest.json" />
+    <Content Include="public\ms-icon-144x144.png" />
+    <Content Include="public\ms-icon-150x150.png" />
+    <Content Include="public\ms-icon-310x310.png" />
+    <Content Include="public\ms-icon-70x70.png" />
     <Content Include="public\mstile-144x144.png" />
     <Content Include="public\mstile-150x150.png" />
     <Content Include="public\mstile-310x150.png" />
     <Content Include="public\mstile-310x310.png" />
     <Content Include="public\mstile-70x70.png" />
+    <Content Include="public\stylesheets\forms.styl" />
     <Content Include="public\stylesheets\style.styl" />
-    <Content Include="public\stylesheets\style.styl.vsspell">
-      <SubType>Content</SubType>
-      <DependentUpon>public\stylesheets\style.styl</DependentUpon>
-    </Content>
     <Content Include="README.md" />
     <Content Include="settings.json" />
     <Content Include="views\club\index.jade" />
     <Content Include="views\club\layout.jade" />
-    <Content Include="views\partials\_flash.jade" />
+    <Content Include="views\style.jade" />
+    <Content Include="views\_flash.jade" />
     <Content Include="views\profile.jade" />
     <Content Include="views\index.jade" />
     <Content Include="views\layout.jade" />
@@ -105,6 +134,7 @@
   <ItemGroup>
     <Folder Include="bin\" />
     <Folder Include="config\" />
+    <Folder Include="tests\" />
     <Folder Include="services\" />
     <Folder Include="public\" />
     <Folder Include="public\images\" />
@@ -113,14 +143,15 @@
     <Folder Include="public\stylesheets\" />
     <Folder Include="routes\" />
     <Folder Include="routes\club\" />
+    <Folder Include="tests\funcional\" />
+    <Folder Include="tests\unit\" />
     <Folder Include="views\" />
     <Folder Include="views\club\" />
-    <Folder Include="views\partials\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="views\register.jade" />
     <Content Include="views\login.jade" />
-    <Content Include="views\partials\_nav.jade" />
+    <Content Include="views\_nav.jade" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config" />
     <Content Include="bin\ChangeConfig.ps1" />

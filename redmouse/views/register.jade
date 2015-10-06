@@ -2,15 +2,24 @@
 
 block content
     .subcontainer
-        h3 
-            span.fa.fa-sign-in Register
+        h1
+            span.fa.fa-sign-in 
+            | Create a local account
             
         #register
             form(name="register", action="/register", method="post")
                 .field
-                    input(type='text', name='email', placeholder='email')
+                    label(for='name') Name
+                    input(type='text', name='name', placeholder='Your name')
                 .field
-                    input(type='password', name='password', placeholder='password')
+                    label(for='email') Email
+                    input(type='text', name='email', placeholder='you@example.com')
+                .field
+                    label(for='password') Password
+                    input(type='password', name='password', placeholder='********')
+                .field                    
+                    label(for='repassword') Lots of Password
+                    input(type='password', name='repassword', placeholder='********')
                 .field
                     input(type='submit', value='register')
     .subcontainer

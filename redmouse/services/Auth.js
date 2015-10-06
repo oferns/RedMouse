@@ -16,23 +16,23 @@ function Auth(options) {
     self.providers = options.authproviders;
     // Atomic Merge accounts
     // 
-    self.docDB.createStoredProcedureAsync(collection._self, {
-        name: "mergeAccounts",
-        body: function (masterAccountId, childAccountId) { // profileId = The Master profile receiving the childId profile
+    //self.docDB.createStoredProcedureAsync(collection._self, {
+    //    name: "mergeAccounts",
+    //    body: function (masterAccountId, childAccountId) { // profileId = The Master profile receiving the childId profile
             
-            var context = getContext();
-            var collection = context.getCollection();
-            var response = context.getResponse();
+    //        var context = getContext();
+    //        var collection = context.getCollection();
+    //        var response = context.getResponse();
             
             
-            var masterAccount = collection.queryDocuments()
+    //        var masterAccount = collection.queryDocuments()
 
-        }
+    //    }
    
     
-    }).then(function (response) {
-        self.= response.resource;
-    });
+    //}).then(function (response) {
+    //    self.= response.resource;
+    //});
 
 
 }
