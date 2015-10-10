@@ -11,17 +11,17 @@ var nib = require('nib');
 // Stylus Tasks
 //////////////////////////////
 gulp.task('styles', function () {
-    gulp.src('public/stylesheets/*.styl')
+    gulp.src('assets/stylus/style.styl')
         .pipe(stylus({
-        paths: ['node_modules', 'styles/globals'],
+        paths: ['node_modules'],
         import: ['jeet/stylus/jeet', 'stylus-type-utils', 'nib', 'rupture/rupture','axis/axis'],
         use: [nib()],
         'include css': true
     }))
-        .pipe(gulp.dest('public/stylesheets/'))
+        .pipe(gulp.dest('public/css/'))
 });
 
 
 gulp.task('watch', function () {
-    gulp.watch('public/stylesheets/*.styl', ['styles']);
+    gulp.watch('assets/stylus/*.styl', ['styles']);
 });

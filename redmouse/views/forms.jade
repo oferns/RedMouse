@@ -1,0 +1,54 @@
+﻿extends layout
+
+block content
+
+    .row
+        .half
+            form(name="style", action="/style", method="get")
+                .field
+                    label(for='email') Email
+                    span.fa.fa-envelope-o.fa-fw
+                    input(type='email', id='email', pattern='[^ @]*@[^ @]*')
+                .field
+                    label(for='number') Number
+                    input(type='number', id='number')
+                .field
+                    label(for='password') Password
+                    input(type='password', id='password')
+                .field
+                    label(for='search') Search
+                    input(type='search', id='search')
+                .field
+                    label(for='tel') Telephone
+                    input(type='tel', id='tel')
+                .field
+                    label(for='text') Text
+                    input(type='text', id='text')
+                .field
+                    label(for='url') Url
+                    input(type='url', id='url')
+                .field
+                    label(for='color') Colour
+                    input(type='color', id='color')
+                .field
+                    label(for='date') Date
+                    input(type='date', id='date')
+                .field
+                    label(for='datetime') Date & Time
+                    input(type='datetime', id='datetime')  
+                .field
+                    label(for='datetime-local') Date & Time (Local)
+                    input(type='datetime-local', id='datetime-local')
+                .field
+                    label(for='month') Month
+                    input(type='month', id='month')
+                .field
+                    label(for='time') Time
+                    input(type='time', id='time')
+                .field
+                    label(for='week') Week
+                    input(type='week', id='week')
+                .field
+                    input(type='submit', value='Submit')
+
+        .half

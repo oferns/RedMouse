@@ -25,7 +25,7 @@
     "express-session": "^1.11.3",
     "font-awesome-stylus": "^4.4.0",
     "gulp": "^3.9.0",
-    "gulp-stylus": "^2.0.7",
+    "gulp-stylus": "^2.1.0",
     "jade": "~1.6.0",
     "jeet": "^6.1.2",
     "markdown": "^0.5.0",

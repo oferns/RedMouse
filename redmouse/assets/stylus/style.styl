@@ -1,12 +1,4 @@
-﻿$w = #F8F8F8
-$g = #EEEEEE
-$r = #EE0000
-$d = #CC0000 
-$b = #111111
-
-
-// font-awesome
-@import '../../node_modules/font-awesome-stylus/stylus'
+﻿
 
 // Axis for useful mixins
 @import '../../node_modules/axis/axis'
@@ -15,25 +7,27 @@ $b = #111111
 @import '../../node_modules/jeet/stylus/jeet'
 
 @import '../../node_modules/rupture/rupture'
-rupture.enable-em-breakpoints = true
+//rupture.enable-em-breakpoints = true
 
-@import 'forms.styl'
+// font-awesome
+@import '../../node_modules/font-awesome-stylus/stylus'
 
 normalize-base()
 normalize-html5()
 
-debug()
+//debug()
 
-.fa
-	margin 0.5em
-	color $r
+@require '_settings'
+@require '_forms'
+@require '_layout'
+
 
 body
 	line-height 1.35em
 
+
 #container
 	center(100%)
-
 
 #nav
 	nav($size: 2, $bg-color: $b, $pos-fxed: true, $link-color: $r)
@@ -45,10 +39,7 @@ body
 	float left
 
 #flash		
-	p
-		margin 0
-	span
-		margin-right .75em
+
 	.info
 		flash()
 	.warn
@@ -60,38 +51,12 @@ body
 
 
 #content
-	area()
 	center(85%)
 	+below(rupture.desktop-cutoff)
 		center(100%)
 		
-.subcontainer
-	center(100%)
-
-.half
-	col(1/2)
-	+mobile()
-		col(1)
-.twothirds
-	col(2/3)
-	+below(rupture.desktop-cutoff)
-		col(1)
-.onethird
-	col(1/3)
-	+below(rupture.desktop-cutoff)
-		col(1)
-.quarter
-	+desktop()
-		col(1/4)
-	+tablet()
-		col(1/2, uncycle:4, cycle:2)
 
 
-
-.threequarters
-	col(3/4)
-	+below(rupture.desktop-cutoff)
-		col(1/2)
 
 #footer 
 	fixed bottom

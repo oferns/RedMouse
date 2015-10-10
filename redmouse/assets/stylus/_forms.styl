@@ -1,15 +1,17 @@
-﻿
+﻿@import '_settings.styl'
+
 +html5-inputs()
-	input($r)
+	input($d)
+
 
 form label
-	label()
+	label()	
 
 form .field
-	field()
+	field(right, 100%)
 
 form input[type='submit']
-	glossy-button: $d
+	glossy-button: $d 'large'
 
 
 form .field.error

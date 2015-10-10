@@ -10,6 +10,10 @@ router.get('/style', function (req, res) {
     res.render('style', { title: 'Red Mouse Style Guide' });
 });
 
+router.get('/forms', function (req, res) {
+    res.render('forms', { title: 'Red Mouse Forms' });
+});
+
 
 
 module.exports = router;

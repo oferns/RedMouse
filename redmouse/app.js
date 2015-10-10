@@ -9,6 +9,7 @@ var session = require('express-session');
 var passport = require('passport');
 var flash = require('connect-flash');
 var Auth = require('./services/Auth');
+var stylus = require('stylus');
 var app = express();
 
 
@@ -42,7 +43,23 @@ app.use(session({
     }
 }));
 
-app.use(require('stylus').middleware(path.join(__dirname, 'public')));
+// app.use(require('stylus').middleware(path.join(__dirname, 'public')));
+
+app.use(
+    stylus.middleware({
+        src: path.join(__dirname, "assets/stylus/style.styl"), 
+        dest: __dirname + "/public/css",
+        debug: true,
+        compile : function (str, path) {
+            console.log('compiling');
+            return stylus(str)
+        .set('filename', path)
+        .set('warn', true)
+        .set('compress', false);
+        }
+    })
+);
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions

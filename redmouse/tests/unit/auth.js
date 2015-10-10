@@ -2,7 +2,7 @@
 
 describe('Auth', function() {
     
-    var auth = require('../services/Auth');
+    var auth = require('../../services/Auth');
     
     
     it('Test 1', function () {
