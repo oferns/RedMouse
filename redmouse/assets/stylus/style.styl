@@ -12,15 +12,35 @@
 // font-awesome
 @import '../../node_modules/font-awesome-stylus/stylus'
 
-normalize-base()
-normalize-html5()
+establish-baseline('normalize')
 
 //debug()
+
+
+h1() 
+h2()
+h3()
+h4()
+h5()
+h6()
+
+tables()
+
+base-font-size = 16px
+
+debug-vertical-alignment()
+
+base-line-height = 24px
+
+relative-font-sizing = true
+
+default-rhythm-border-style = solid
+
+min-line-padding = 2px
 
 @require '_settings'
 @require '_forms'
 @require '_layout'
-
 
 body
 	line-height 1.35em
@@ -39,7 +59,8 @@ body
 	float left
 
 #flash		
-
+	p
+		margin 0
 	.info
 		flash()
 	.warn
@@ -49,7 +70,6 @@ body
 	.success
 		flash: 'success'
 
-
 #content
 	center(85%)
 	+below(rupture.desktop-cutoff)
@@ -58,5 +78,10 @@ body
 
 
 
+#register
+	center(100%)
+
 #footer 
 	fixed bottom
+
+

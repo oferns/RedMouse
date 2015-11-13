@@ -1,0 +1,7 @@
+﻿form(name="reset", action="/reset", method="post")
+    input(type="hidden" name="_csrf" value="#{csrfToken}")
+    .field
+        label(for='email') Email
+        input(type='text', name='email', placeholder='you@example.com')
+    .field
+        input(type='submit', value='Reset')

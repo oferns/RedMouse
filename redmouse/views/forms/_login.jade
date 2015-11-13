@@ -1,0 +1,11 @@
+﻿form(name="login", action="/login", method="post")
+    input(type="hidden" name="_csrf" value="#{csrfToken}")
+    .field
+        label(for='email') Email
+        input(type='text', name='email', placeholder='you@example.com')
+    .field
+        label(for='email') Password
+        input(type='password', name='password', placeholder='*******')
+    .field
+        label(for='submit') 
+        input(type='submit', value='Login')

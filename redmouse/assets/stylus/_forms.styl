@@ -2,13 +2,23 @@
 
 +html5-inputs()
 	input($d)
+	margin-left 1em
+	
+
+form input
+	input($d)
+	margin-left 1em
 
 
 form label
-	label()	
+	label()
+	min-width 120px
+	text-align right
+	+below(rupture.mobile-cutoff)
+		display none		
 
 form .field
-	field(right, 100%)
+	field(left, 100%)
 
 form input[type='submit']
 	glossy-button: $d 'large'

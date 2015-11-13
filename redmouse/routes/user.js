@@ -4,6 +4,7 @@ var router = express.Router();
 var passport = require('passport');
 var csrf = require('csurf');
 
+
 var csrfProtection = csrf({ cookie: true });
 
 
@@ -37,7 +38,9 @@ router.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email'
 
 router.get('/auth/facebook/callback', passport.authenticate('facebook', {
     successRedirect : '/profile',
-    failureRedirect : '/login'
+    failureRedirect : '/login',
+    failureFlash : true, // allow flash messages
+    successFlash: true
 }));
 
 router.get('/auth/facebook/deauth', function (req, res) {
@@ -60,12 +63,10 @@ router.get('/auth/twitter/callback', passport.authenticate('twitter', {
     failureRedirect : '/login'
 }));
 
-
 router.post('/register', csrfProtection, passport.authenticate('local-signup', {
     successRedirect : '/profile', // redirect to the secure profile section
     failureRedirect : '/login', // redirect back to the signup page if there is an error
 }));
-
 
 router.post('/login', csrfProtection, passport.authenticate('local-login', {
     successRedirect : '/profile', // redirect to the secure profile section
@@ -73,6 +74,22 @@ router.post('/login', csrfProtection, passport.authenticate('local-login', {
     failureFlash : true, // allow flash messages
     successFlash: true
 }));
+
+
+router.get('/reset', csrfProtection, function (req, res) {
+    res.render('reset', { csrfToken: req.csrfToken() });
+});
+
+
+router.get('/reset:token', csrfProtection, function (req, res) {
+    res.render('reset', { csrfToken: req.csrfToken() });
+});
+
+
+router.post('/reset', csrfProtection, function (req, res) { 
+    
+});
+
 
 function isLoggedIn(req, res, next) {
     // if user is authenticated in the session, carry on 

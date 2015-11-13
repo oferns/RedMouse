@@ -4,13 +4,17 @@
 block content
     .row        
         h1
-            i.fa.fa-sign-in.fa-fw
-            | Login
-        .third
-            include ./forms/_login
-        .twothirds
-            include ./partials/_social
-    .row 
+            i.fa.fa-sign-in
+            | Password Reset
+
+        form(name="login", action="/reset", method="post")
+            input(type="hidden" name="_csrf" value="#{csrfToken}")
+            .field
+                label(for='email') Email
+                input(type='text', name='email', placeholder='you@example.com')
+            .field
+                input(type='submit', value='Reset')
+    .row
         :markdown
             Bacon ipsum dolor amet elit labore laboris, andouille ut capicola turducken pancetta pork cillum magna exercitation. 
             Laborum swine ut et ullamco, cupidatat **meatball shankle fatback**. Deserunt elit excepteur landjaeger pork loin ullamco consectetur eiusmod. 

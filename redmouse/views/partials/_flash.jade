@@ -1,24 +1,23 @@
 ﻿- if (flash && flash.success && flash.success.length > 0)
   each m in flash.success 
     p.success
-        span.fa.fa-gavel
-            =m
+        i.fa.fa-thumbs-o-up.fa-lg.fa-fw
+        =m
 
 - if (flash && flash.info && flash.info.length > 0)
   each m in flash.info
     p.info
-        span.fa.fa-gavel
-            =m
+        i.fa.fa-smile-o.fa-lg.fa-fw
+        =m
 
 - if (flash && flash.warning && flash.warning.length > 0)
   each m in flash.warning
     p.warn
-        span.fa.fa-gavel
-            =m
+        i.fa.fa-exclamation-circle.fa-lg.fa-fw
+        =m
 
 - if (flash && flash.error && flash.error.length > 0)
   each m in flash.error 
     p.error
-        span.fa.fa-gavel
-            =m
-
+        i.fa.fa-thumbs-o-down.fa-lg.fa-fw
+        =m

@@ -38,7 +38,7 @@
     <Compile Include="bin\www" />
     <Compile Include="routes\user.js" />
     <Compile Include="services\Auth.js" />
-    <Compile Include="services\DocDB.js" />
+    <Compile Include="services\DocDBUtils.js" />
     <Compile Include="tests\funcional\root.js">
       <SubType>Code</SubType>
       <TestFramework>Mocha</TestFramework>
@@ -122,11 +122,11 @@
     <Content Include="public\mstile-70x70.png" />
     <Content Include="assets\stylus\_forms.styl" />
     <Content Include="assets\stylus\style.styl" />
-    <Content Include="README.md" />
     <Content Include="settings.json" />
     <Content Include="views\club\index.jade" />
     <Content Include="views\club\layout.jade" />
     <Content Include="views\forms.jade" />
+    <Content Include="views\reset.jade" />
     <Content Include="views\style.jade" />
     <Content Include="views\_flash.jade" />
     <Content Include="views\profile.jade" />
@@ -135,6 +135,7 @@
     <Content Include="views\error.jade" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="assets\typescript\" />
     <Folder Include="assets\stylus\" />
     <Folder Include="bin\" />
     <Folder Include="config\" />

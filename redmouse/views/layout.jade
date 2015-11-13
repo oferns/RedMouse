@@ -33,9 +33,10 @@ html(lang="en")
     #nav
         a(href='./')
             img(src='/images/logo.gif',alt='redmouse',id='logo')
-        include ./_nav
+        include ./partials/_nav
     
-    include ./_flash
+    #flash
+        include ./partials/_flash
 
     block header
     #content

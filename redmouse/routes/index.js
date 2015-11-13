@@ -7,6 +7,11 @@ router.get('/', function (req, res) {
 });
 
 router.get('/style', function (req, res) {
+    req.flash('success', 'This is a success message');
+    req.flash('info', 'This is an info message');
+    req.flash('warning', 'This is a warning message');
+    req.flash('error', 'This is an error message');
+
     res.render('style', { title: 'Red Mouse Style Guide' });
 });
 

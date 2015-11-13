@@ -1,0 +1,17 @@
+﻿form(name="register", action="/register", method="post")
+    input(type="hidden" name="_csrf" value="#{csrfToken}")
+    .field
+        label(for='name') Name
+        input(type='text', name='name', placeholder='Your name')
+    .field
+        label(for='email') Email
+        input(type='text', name='email', placeholder='you@example.com')
+    .field
+        label(for='password') Password
+        input(type='password', name='password', placeholder='********')
+    .field                    
+        label(for='repassword') Lots of Password
+        input(type='password', name='repassword', placeholder='********')
+    .field
+        label(for='submit')
+        input(type='submit', value='register')  

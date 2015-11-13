@@ -1,5 +1,4 @@
-﻿var fs = require('fs');
-var express = require('express');
+﻿var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -10,15 +9,19 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var Auth = require('./services/Auth');
 var stylus = require('stylus');
-var app = express();
+var dc = require('documentdb').DocumentClient;
 
 
-
+var fs = require('fs');
 var config = fs.readFileSync('./settings.json');
-
 var settings = JSON.parse(config);
 
-var auth = new Auth(settings);
+var app = express();
+var smtp = require('sendgrid')(settings.sendGrid.userName, settings.sendGrid.password);
+var docClient = new dc(settings.docDb.uri, { masterKey: settings.docDb.primaryKey });
+var auth = new Auth(settings.authproviders, docClient, settings.docDb.database, settings.docDb.collection, smtp);
+
+auth.init();
 
 var accessLogStream = fs.createWriteStream(__dirname + '/access.log', { flags: 'a' });
 
@@ -30,10 +33,10 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev', { stream: accessLogStream }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser('secret'));
+app.use(cookieParser('redmouse'));
 app.use(session({
-    secret: 'secret',
-    name: 'palmers',
+    secret: 'redmouse',
+    name: 'redmouse',
     proxy: true,
     resave: true,
     saveUninitialized: true,

@@ -46,7 +46,7 @@ module.exports = function (passport, auth) {
         };
         
         process.nextTick(function () {
-            auth.register(profile, function (err, user) {
+            auth.register(req.user, profile, function (err, user) {
                 if (!err) {
                     req.flash('success', 'Registration succeeded!');
                     req.user = user;
@@ -120,16 +120,13 @@ module.exports = function (passport, auth) {
             }; 
             
             auth.login(req.user, newprofile , function (err, user) {
-                if (err) {
-                    done(err);
-                }
 
                 if (!err) {
                     req.flash('success', 'Login succeeded!');
                     req.user = user;
                     return done(null, user)
                 }
-
+                
                 req.flash('warning', 'Login failed!');
                 return done(null, false);
             });
@@ -195,10 +192,11 @@ module.exports = function (passport, auth) {
             }, function (err, user) {
                 if (!err) {
                     req.user = user;
-                    return done(null, user, { message: 'Login succeeded!'} )
+                    req.flash('success', 'Login succeeded!');
+                    return done(null, user);
                 }
-
-                return done(null, false, { message: 'Login failed!' });
+                req.flash('warning', 'Login failed!');
+                return done(null, false);
             });
         });
     }));

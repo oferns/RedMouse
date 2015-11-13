@@ -3,31 +3,19 @@
 block content
     .row
         h1
-            span.fa.fa-sign-in 
+            span.fa.fa-sign-in.fa-fw 
             | Create a local account
-            
-        #register
-            form(name="register", action="/register", method="post")
-                .field
-                    label(for='name') Name
-                    input(type='text', name='name', placeholder='Your name')
-                .field
-                    label(for='email') Email
-                    input(type='text', name='email', placeholder='you@example.com')
-                .field
-                    label(for='password') Password
-                    input(type='password', name='password', placeholder='********')
-                .field                    
-                    label(for='repassword') Lots of Password
-                    input(type='password', name='repassword', placeholder='********')
-                .field
-                    input(type='submit', value='register')
-    .row
-        :markdown
-            Bacon ipsum dolor amet elit labore laboris, andouille ut capicola turducken pancetta pork cillum magna exercitation. 
-            Laborum swine ut et ullamco, cupidatat **meatball shankle fatback**. Deserunt elit excepteur landjaeger pork loin ullamco consectetur eiusmod. 
-            Ex sausage enim turkey minim. Reprehenderit ham swine irure brisket in shankle. Pancetta duis ut est aliquip bacon.
 
-            Strip steak anim tempor filet mignon aliquip ut pork belly nulla culpa chicken frankfurter duis enim sunt venison. 
-            T-bone cow ipsum ball tip sirloin kevin aliquip exercitation rump in ribeye biltong pork belly sint. 
-            Biltong ut sunt drumstick cupim. In corned beef cupidatat cupim frankfurter ball tip irure elit.
+        .third
+            include ./forms/_register
+        .twothirds
+            :markdown
+                ## Why create a local account?
+
+                Bacon ipsum dolor amet elit labore laboris, andouille ut capicola turducken pancetta pork cillum magna exercitation. 
+                Laborum swine ut et ullamco, cupidatat **meatball shankle fatback**. Deserunt elit excepteur landjaeger pork loin ullamco consectetur eiusmod. 
+                Ex sausage enim turkey minim. Reprehenderit ham swine irure brisket in shankle. Pancetta duis ut est aliquip bacon.
+
+                Strip steak anim tempor filet mignon aliquip ut pork belly nulla culpa chicken frankfurter duis enim sunt venison. 
+                T-bone cow ipsum ball tip sirloin kevin aliquip exercitation rump in ribeye biltong pork belly sint. 
+                Biltong ut sunt drumstick cupim. In corned beef cupidatat cupim frankfurter ball tip irure elit.
