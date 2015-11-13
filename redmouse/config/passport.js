@@ -37,7 +37,9 @@ module.exports = function (passport, auth) {
     },    
    function (req, email, password, done) {
         
-        var profile = { // Define our profile
+        var profile = {
+ // Define our profile
+            name: req.body.name,
             providerId: email, 
             password: password,
             provider: 'Local',
@@ -52,8 +54,13 @@ module.exports = function (passport, auth) {
                     req.user = user;
                     return done(null, req.user)
                 }
-                req.flash('warning', 'Registration failed!');
-                return done(err, false);
+                if (err.code === 409) {
+                    req.flash('warning', 'Registration failed! Username taken');
+                }
+                else {
+                    req.flash('warning', 'Registration failed!');
+                }
+                return done(null, false);
             });
         });
     })),
@@ -71,22 +78,23 @@ module.exports = function (passport, auth) {
     },
 
     function (req, email, password, done) { // callback with email and password from our form
-      process.nextTick(function () {
-                                  
-            var profile = { // Define our profile
+        process.nextTick(function () {
+            
+            var profile = {
+ // Define our profile
                 providerId: email, 
                 password: password,
                 provider: 'Local',
                 email: email,
                 providerProfile: {}
             };
-                                   
+            
             auth.login(req.user, profile, function (err, account) {
                 if (err) { // If we flunked out..
                     req.flash('warning', 'Login failed!'); // ..let the user know something went wrong..
                     return done(null, false); // ..and return immediately.
                 }
-                                                
+                
                 req.flash('success', 'Login succeeded!');
                 req.user = account;
                 return done(null, req.user)
@@ -117,10 +125,10 @@ module.exports = function (passport, auth) {
                 token: token,
                 refreshToken: refreshToken,
                 providerProfile: profile
-            }; 
+            };
             
             auth.login(req.user, newprofile , function (err, user) {
-
+                
                 if (!err) {
                     req.flash('success', 'Login succeeded!');
                     req.user = user;
@@ -154,7 +162,7 @@ module.exports = function (passport, auth) {
             refreshToken: refreshToken,
             providerProfile: profile
         };
-
+        
         process.nextTick(function () {
             auth.login(newprofile, function (err, user) {
                 if (!err) {

@@ -7,6 +7,8 @@ var u = require('util')
 var async = require('async');
 var crypto = require('crypto');
 
+var friendlyUrl = require('friendly-url'); // used for generating user slugs
+
 var DocDBUtils = require('./DocDBUtils');
 
 function Auth(providers, documentClient, databaseId, collectionId, smtp) {
@@ -246,12 +248,19 @@ Auth.prototype.register = function (account, profile, callback) {
         }
         
         if (!account) {
-            //create a new account               
-            self.client.createDocument(self.collection._self, newUser, function (err, account) {
+            // add a id
+            newUser['id'] = friendlyUrl(profile.name);
+            // and an easy display name
+            newUser['displayName'] = profile.name;
+            
+            // TODO: Check the slug for uniqueness and add a random extension. Idea is it can be changed later. Needs thought
+
+            //create a new account
+            self.client.createDocument(self.collection._self, newUser, function (err, newAccount) {
                 if (err) {
-                    callback(err);
+                    callback({ code:err.code, message: err.body });
                 } else {
-                    callback(null, account);
+                    callback(null, newAccount);
                 }
             });
         }

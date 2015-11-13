@@ -126,10 +126,15 @@
     <Content Include="views\club\index.jade" />
     <Content Include="views\club\layout.jade" />
     <Content Include="views\forms.jade" />
+    <Content Include="views\forms\_pwdreset.jade" />
+    <Content Include="views\forms\_register.jade" />
+    <Content Include="views\forms\_login.jade" />
+    <Content Include="views\partials\_social.jade" />
     <Content Include="views\reset.jade" />
     <Content Include="views\style.jade" />
-    <Content Include="views\_flash.jade" />
-    <Content Include="views\profile.jade" />
+    <Content Include="views\partials\_flash.jade" />
+    <Content Include="views\user\layout.jade" />
+    <Content Include="views\user\profile.jade" />
     <Content Include="views\index.jade" />
     <Content Include="views\layout.jade" />
     <Content Include="views\error.jade" />
@@ -153,15 +158,14 @@
     <Folder Include="tests\unit\" />
     <Folder Include="views\" />
     <Folder Include="views\club\" />
-    <Folder Include="views\atoms\" />
-    <Folder Include="views\molecules\" />
-    <Folder Include="views\templates\" />
-    <Folder Include="views\organisms\" />
+    <Folder Include="views\forms\" />
+    <Folder Include="views\user\" />
+    <Folder Include="views\partials\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="views\register.jade" />
     <Content Include="views\login.jade" />
-    <Content Include="views\_nav.jade" />
+    <Content Include="views\partials\_nav.jade" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config" />
     <Content Include="bin\ChangeConfig.ps1" />
