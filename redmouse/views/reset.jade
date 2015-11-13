@@ -4,22 +4,16 @@
 block content
     .row        
         h1
-            i.fa.fa-sign-in
+            i.fa.fa-sign-in.fa-fw
             | Password Reset
+        .onethird
+            include ./forms/_pwdreset
+        .twothirds
+            :markdown
+                Bacon ipsum dolor amet elit labore laboris, andouille ut capicola turducken pancetta pork cillum magna exercitation. 
+                Laborum swine ut et ullamco, cupidatat **meatball shankle fatback**. Deserunt elit excepteur landjaeger pork loin ullamco consectetur eiusmod. 
+                Ex sausage enim turkey minim. Reprehenderit ham swine irure brisket in shankle. Pancetta duis ut est aliquip bacon.
 
-        form(name="login", action="/reset", method="post")
-            input(type="hidden" name="_csrf" value="#{csrfToken}")
-            .field
-                label(for='email') Email
-                input(type='text', name='email', placeholder='you@example.com')
-            .field
-                input(type='submit', value='Reset')
-    .row
-        :markdown
-            Bacon ipsum dolor amet elit labore laboris, andouille ut capicola turducken pancetta pork cillum magna exercitation. 
-            Laborum swine ut et ullamco, cupidatat **meatball shankle fatback**. Deserunt elit excepteur landjaeger pork loin ullamco consectetur eiusmod. 
-            Ex sausage enim turkey minim. Reprehenderit ham swine irure brisket in shankle. Pancetta duis ut est aliquip bacon.
-
-            Strip steak anim tempor filet mignon aliquip ut pork belly nulla culpa chicken frankfurter duis enim sunt venison. 
-            T-bone cow ipsum ball tip sirloin kevin aliquip exercitation rump in ribeye biltong pork belly sint. 
-            Biltong ut sunt drumstick cupim. In corned beef cupidatat cupim frankfurter ball tip irure elit.
+                Strip steak anim tempor filet mignon aliquip ut pork belly nulla culpa chicken frankfurter duis enim sunt venison. 
+                T-bone cow ipsum ball tip sirloin kevin aliquip exercitation rump in ribeye biltong pork belly sint. 
+                Biltong ut sunt drumstick cupim. In corned beef cupidatat cupim frankfurter ball tip irure elit.

@@ -3,9 +3,9 @@
 block content
     .row
         h1 Profile
+            
         - if (user.Local)
-            p=user.Local
-        p
+
             a(href='/logout') logout
 block footer
         h3 footer
