@@ -7,9 +7,9 @@ var u = require('util')
 var async = require('async');
 var crypto = require('crypto');
 
-var friendlyUrl = require('friendly-url'); // used for generating user slugs
+var friendlyUrl = require('friendly-url'); // used for generating user ids
 
-var DocDBUtils = require('./DocDBUtils');
+// var DocDBUtils = require('./DocDBUtils');
 
 function Auth(providers, documentClient, databaseId, collectionId, smtp) {
     var self = this;

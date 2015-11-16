@@ -1,25 +1,63 @@
-﻿var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var session = require('express-session');
-var passport = require('passport');
-var flash = require('connect-flash');
-var Auth = require('./services/Auth');
-var stylus = require('stylus');
-var dc = require('documentdb').DocumentClient;
+﻿var express = require('express'); // For routing
+var path = require('path'); // to find the config file
+var fs = require('fs'); // to read the config file
+
+var favicon = require('serve-favicon'); // static favicon magic
+var logger = require('morgan'); // request logging
+var cookieParser = require('cookie-parser'); // parsing cookies, dummy, like the auth cookie
+var bodyParser = require('body-parser'); // paring forms
+var session = require('express-session'); // do I need this? cookie only or redis maybe
+var passport = require('passport'); // For all your authentication needs
+var flash = require('connect-flash'); // flash messages
+var bunyan = require('bunyan'); // Application logging
+var bunyanmw = require('bunyan-middleware'); // request logging
 
 
-var fs = require('fs');
+
+// lets get our config
 var config = fs.readFileSync('./settings.json');
 var settings = JSON.parse(config);
 
-var app = express();
+
+var Auth = require('./services/Auth'); //  Get services we want to inject 
+var stylus = require('stylus');
+
+var dc = require('documentdb').DocumentClient;
+
+var log = bunyan.createLogger({
+    name: 'redmouse',
+    streams: [
+        {
+            level: 'info',
+            stream: process.stdout            // log INFO and above to stdout
+        },
+        {
+            level: 'debug',
+            path: 'log/rm.log'  // log debug and above to a file
+        }
+    ]
+});
+
 var smtp = require('sendgrid')(settings.sendGrid.userName, settings.sendGrid.password);
 var docClient = new dc(settings.docDb.uri, { masterKey: settings.docDb.primaryKey });
 var auth = new Auth(settings.authproviders, docClient, settings.docDb.database, settings.docDb.collection, smtp);
+
+var app = express();
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(bunyanmw(
+    {
+        headerName: 'X-Request-Id'
+        , propertyName: 'reqId'
+        , logName: 'req_id'
+        , obscureHeaders: []
+        , logger: log
+    }
+));
+
+
+
 
 auth.init();
 
@@ -63,7 +101,7 @@ app.use(
     })
 );
 
-app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash());
@@ -74,16 +112,17 @@ app.use(function (req, res, next) {
         info: req.flash('info'),
         warning: req.flash('warning'), 
         error: req.flash('error')
-    }
+    };
     
-    next()
+    next();
 });
 
 require('./config/passport')(passport, auth);
 
-var routes = require('./routes/index');
-var users = require('./routes/user');
-var clubs = require('./routes/club/');
+var routes = require('./routes/');  // index.js
+var users = require('./routes/user/'); // index.js
+var clubs = require('./routes/club/'); // index.js
+
 app.use('/', routes);
 app.use('/', users);
 app.use('/club', clubs);
@@ -110,16 +149,16 @@ if (app.get('env') === 'development') {
         });
     });
 }
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function (err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
+else {
+    // production error handler
+    // no stacktraces leaked to user
+    app.use(function (err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', {
+            message: err.message,
+            error: {}
+        });
     });
-});
-
+}
 
 module.exports = app;

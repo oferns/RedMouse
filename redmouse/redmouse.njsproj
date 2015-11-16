@@ -36,7 +36,7 @@
     <Compile Include="routes\club\index.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="bin\www" />
-    <Compile Include="routes\user.js" />
+    <Compile Include="routes\user\index.js" />
     <Compile Include="services\Auth.js" />
     <Compile Include="services\DocDBUtils.js" />
     <Compile Include="tests\funcional\root.js">
@@ -124,7 +124,7 @@
     <Content Include="assets\stylus\style.styl" />
     <Content Include="settings.json" />
     <Content Include="views\club\index.jade" />
-    <Content Include="views\club\layout.jade" />
+    <Content Include="views\club\_layout.jade" />
     <Content Include="views\forms.jade" />
     <Content Include="views\forms\_pwdreset.jade" />
     <Content Include="views\forms\_register.jade" />
@@ -133,10 +133,10 @@
     <Content Include="views\reset.jade" />
     <Content Include="views\style.jade" />
     <Content Include="views\partials\_flash.jade" />
-    <Content Include="views\user\layout.jade" />
+    <Content Include="views\user\_layout.jade" />
     <Content Include="views\user\profile.jade" />
     <Content Include="views\index.jade" />
-    <Content Include="views\layout.jade" />
+    <Content Include="views\_layout.jade" />
     <Content Include="views\error.jade" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +147,7 @@
     <Folder Include="assets\" />
     <Folder Include="public\css\" />
     <Folder Include="public\js\" />
+    <Folder Include="routes\user\" />
     <Folder Include="tests\" />
     <Folder Include="services\" />
     <Folder Include="public\" />
@@ -158,9 +159,13 @@
     <Folder Include="tests\unit\" />
     <Folder Include="views\" />
     <Folder Include="views\club\" />
+    <Folder Include="views\club\forms\" />
+    <Folder Include="views\club\partials\" />
     <Folder Include="views\forms\" />
     <Folder Include="views\user\" />
     <Folder Include="views\partials\" />
+    <Folder Include="views\user\forms\" />
+    <Folder Include="views\user\partials\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="views\register.jade" />
