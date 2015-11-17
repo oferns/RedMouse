@@ -33,18 +33,23 @@
     <Compile Include="app.js" />
     <Compile Include="config\passport.js" />
     <Compile Include="gulpfile.js" />
+    <Compile Include="modules\auth.js" />
+    <Compile Include="modules\docdb.js" />
     <Compile Include="routes\club\index.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="bin\www" />
     <Compile Include="routes\user\index.js" />
     <Compile Include="services\Auth.js" />
     <Compile Include="services\DocDBUtils.js" />
-    <Compile Include="tests\funcional\root.js">
+    <Compile Include="tests\functional\root.js">
       <SubType>Code</SubType>
       <TestFramework>Mocha</TestFramework>
     </Compile>
     <Compile Include="tests\unit\auth.js">
       <SubType>Code</SubType>
+      <TestFramework>Mocha</TestFramework>
+    </Compile>
+    <Compile Include="tests\unit\docdb.js">
       <TestFramework>Mocha</TestFramework>
     </Compile>
     <Content Include="assets\stylus\_layout.styl" />
@@ -145,6 +150,7 @@
     <Folder Include="bin\" />
     <Folder Include="config\" />
     <Folder Include="assets\" />
+    <Folder Include="modules\" />
     <Folder Include="public\css\" />
     <Folder Include="public\js\" />
     <Folder Include="routes\user\" />
@@ -155,7 +161,7 @@
     <Folder Include="public\fonts\" />
     <Folder Include="routes\" />
     <Folder Include="routes\club\" />
-    <Folder Include="tests\funcional\" />
+    <Folder Include="tests\functional\" />
     <Folder Include="tests\unit\" />
     <Folder Include="views\" />
     <Folder Include="views\club\" />

@@ -37,8 +37,8 @@ module.exports = function (passport, auth) {
     },    
    function (req, email, password, done) {
         
+        // Define our profile
         var profile = {
- // Define our profile
             name: req.body.name,
             providerId: email, 
             password: password,
