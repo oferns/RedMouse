@@ -5,10 +5,8 @@ var _GET_BY_ID = 'SELECT * FROM root r WHERE r.id = @key';
 module.exports = docdb;
 
 function docdb(client, collink) {
-    var self = this;
-    self.client = client;
-    self.collink = collink;
-    return;
+    this.client = client;
+    this.collink = collink;
 }
 
 
