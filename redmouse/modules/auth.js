@@ -53,7 +53,7 @@ auth.prototype.register = function (profile, callback) {
         
         self.db.addItem(account, function (err, newaccount) {
             if (err) return callback(err);
-            return (null, newaccount);
+            return callback(null, newaccount);
         });
     });
 }
@@ -65,12 +65,13 @@ auth.prototype.socialLogin = function (profile, callback) {
         if (err) return callback(err);
         
         if (!account) {
-            self.register(profile, function (err, newaccount) {
+            self.db.addItem(profile, function (err, newaccount) {
                 if (err) return callback(err);
                 return callback(null, newaccount);
             });
+        } else {
+            return callback(null, account);
         }
-        return callback(null, account);
     });
 }
 
@@ -94,7 +95,7 @@ auth.prototype.getAccountByProvider = function (profile, callback) {
     if (!profile || !profile.provider || !profile.providerId) {
         return callback(new Error('You must provide a profile with a provider, and a providerid property'));
     }
-
+    
     var queryDef = {
         'query': u.format(_GET_BY_PROFILE_ID, profile.provider),
         'parameters': [{ 'name': '@providerid', 'value': profile.providerId }]
@@ -115,7 +116,6 @@ auth.prototype.makeResetLink = function () {
 }
 
 auth.prototype.encryptPassword = function (password, salt) {
-    if (!password || !salt) return '';
     var salt = new Buffer(salt, 'base64');
     return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
 }

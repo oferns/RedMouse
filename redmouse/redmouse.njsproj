@@ -177,6 +177,7 @@
     <Content Include="views\register.jade" />
     <Content Include="views\login.jade" />
     <Content Include="views\partials\_nav.jade" />
+    <Content Include="wallaby.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config" />
     <Content Include="bin\ChangeConfig.ps1" />

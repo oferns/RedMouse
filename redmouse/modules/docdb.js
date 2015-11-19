@@ -52,14 +52,14 @@ docdb.prototype.addItem = function (item, callback) {
 };
 
 docdb.prototype.deleteItem = function (itemlink, callback) {
-    this.client.deleteDocument(itemlink, account, function (err, deleted) {
+    this.client.deleteDocument(itemlink, function (err, deleted) {
         if (err) return callback(err);
         return callback(null, deleted);
     });
 };
 
 docdb.prototype.updateItem = function (item, callback) {
-    this.client.replaceDocument(item._self, account, function (err, replaced) {
+    this.client.replaceDocument(item._self, item, function (err, replaced) {
         if (err) return callback(err);
         return callback(null, replaced);
     });

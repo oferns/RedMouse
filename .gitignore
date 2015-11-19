@@ -32,6 +32,8 @@ node_modules
 # Settings file
 settings.json
 
+# wallaby
+wallaby.js
 
 ### VisualStudio ###
 ## Ignore Visual Studio temporary files, build results, and
