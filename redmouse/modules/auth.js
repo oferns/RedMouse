@@ -86,7 +86,7 @@ auth.prototype.addProfile = function (currentaccount, profile, callback) {
 auth.prototype.getAccountBySlug = function (slug, callback) {
     this.db.getItem(slug, function (err, result) {
         if (err) return callback(err);
-        return callback(null, account);
+        return callback(null, result);
     });
 }
 

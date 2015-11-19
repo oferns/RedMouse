@@ -17,6 +17,25 @@ describe('docdb', function () {
     
     // The createDatabase method tests
     describe('createDatabase', function () {
+        it('createDatabase should return an error when db errors', function () {
+            var clientMock = {
+                createDatabase: function (db, callback) { callback(new Error('This is an error')); }
+            };
+            
+            var spy = chai.spy.on(clientMock, 'createDatabase')
+            
+            var db = new docdb(clientMock, 'link');
+            
+            db.createDatabase('test', function (err, result) {
+                assert(err instanceof Error, 'err is not an error');
+                assert(err.message == 'This is an error', 'err message is wrong')
+                assert.strictEqual(result, undefined, 'Not expecting a return value');
+            });
+            
+            expect(spy).to.have.been.called.once;
+        
+        })
+        
         it('should call createDatabase on the client', function () {
             var clientMock = {
                 createDatabase: function (db, callback) { callback(null, db); }

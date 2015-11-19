@@ -187,13 +187,34 @@ describe('auth', function () {
 
             expect(spy).to.have.been.called.once;
             expect(spy2).to.have.been.called.once;
-        })            
+        })
+
+        it('getAccountByProvider should return null when passed an invalid profile', function () {
+            
+            var docDbMock = {
+                queryCollection: function (queryDef, callback) { callback(null, null) }
+            };
+            
+            var authobj = new auth(docDbMock, {});
+            
+            var spy = chai.spy.on(authobj, 'getAccountByProvider');
+            var spy2 = chai.spy.on(docDbMock, 'queryCollection');
+            
+            
+            authobj.getAccountByProvider(localAccount.Local, function (err, account) {
+                assert.equal(err, null, 'err is not an error');
+                assert.strictEqual(null, account, 'Wrong account return');
+            });
+            
+            expect(spy).to.have.been.called.once;
+            expect(spy2).to.have.been.called.once;
+        })   
     })
     
     describe('#getAccountBySlug()', function () {
-        it('getAccountBySlug returns error when db returns an error', function () {
+        it('getAccountBySlug should return an error when db returns an error', function () {
             var docDbMock = {
-                addItem: function (item, callback) { callback(new Error('This is an error')) }
+                getItem: function (item, callback) { callback(new Error('This is an error')) }
             };
 
             var authobj = new auth(docDbMock, {});
@@ -208,6 +229,41 @@ describe('auth', function () {
             
             expect(spy).to.have.been.called.once;
         })
+
+        it('getAccountBySlug should return null when account not found', function () {
+            var docDbMock = {
+                getItem: function (item, callback) { callback(null, null) }
+            };
+            
+            var authobj = new auth(docDbMock, {});
+            
+            var spy = chai.spy.on(docDbMock, 'getItem');
+            
+            authobj.getAccountBySlug('slug', function (err, account) {
+                assert.equal(err, null, 'err is not an error');
+                assert.strictEqual(null, account, 'Wrong account return');
+            });
+            
+            expect(spy).to.have.been.called.once;
+        })
+
+        it('getAccountBySlug should return the account when found', function () {
+            var docDbMock = {
+                getItem: function (item, callback) { callback(null, localAccount) }
+            };
+            
+            var authobj = new auth(docDbMock, {});
+            
+            var spy = chai.spy.on(docDbMock, 'getItem');
+            
+            authobj.getAccountBySlug('slug', function (err, account) {
+                assert.equal(err, null, 'err is not an error');
+                assert.strictEqual(localAccount, account, 'Wrong account return');
+            });
+            
+            expect(spy).to.have.been.called.once;
+        })
+
     })
 
     describe('#makeSalt()', function () {
