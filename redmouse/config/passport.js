@@ -19,7 +19,7 @@ module.exports = function (passport, auth) {
     
     // used to deserialize the user
     passport.deserializeUser(function (id, done) {
-        auth.getAccountById(id, function (err, user) {
+        auth.getAccountBySlug(id, function (err, user) {
             done(err, user);
         });
     });
