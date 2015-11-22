@@ -78,18 +78,19 @@ module.exports = function (passport, auth) {
     },
 
     function (req, email, password, done) { // callback with email and password from our form
+        
+        // Define our profile            
+        var profile = {
+            providerId: email, 
+            password: password,
+            provider: 'Local',
+            email: email,
+            providerProfile: {}
+        };
+                      
         process.nextTick(function () {
-            
-            var profile = {
- // Define our profile
-                providerId: email, 
-                password: password,
-                provider: 'Local',
-                email: email,
-                providerProfile: {}
-            };
-            
-            auth.login(req.user, profile, function (err, account) {
+                       
+            auth.login(profile, function (err, account) {
                 if (err) { // If we flunked out..
                     req.flash('warning', 'Login failed!'); // ..let the user know something went wrong..
                     return done(null, false); // ..and return immediately.
@@ -115,26 +116,25 @@ module.exports = function (passport, auth) {
 
     // facebook will send back the token and profile
     function (req, token, refreshToken, profile, done) {
-        process.nextTick(function () {
-            
-            var newprofile = {
-                name: profile.displayName, 
-                email: profile.emails, 
-                provider: 'Facebook', 
-                providerId: profile.id,
-                token: token,
-                refreshToken: refreshToken,
-                providerProfile: profile
-            };
-            
-            auth.login(req.user, newprofile , function (err, user) {
-                
+        
+        var profile = {
+            name: profile.displayName, 
+            email: profile.emails, 
+            provider: 'Facebook', 
+            providerId: profile.id,
+            token: token,
+            refreshToken: refreshToken,
+            providerProfile: profile
+        };
+        
+        
+        process.nextTick(function () {            
+            auth.socialLogin(profile , function (err, user) {                
                 if (!err) {
                     req.flash('success', 'Login succeeded!');
                     req.user = user;
                     return done(null, user)
-                }
-                
+                }                
                 req.flash('warning', 'Login failed!');
                 return done(null, false);
             });

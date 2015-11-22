@@ -19,10 +19,8 @@ var config = fs.readFileSync('./settings.json');
 var settings = JSON.parse(config);
 
 
-var Auth = require('./services/Auth'); //  Get services we want to inject 
 var stylus = require('stylus');
 
-var dc = require('documentdb').DocumentClient;
 
 var log = bunyan.createLogger({
     name: 'redmouse',
@@ -38,9 +36,13 @@ var log = bunyan.createLogger({
     ]
 });
 
+
+var dc = require('documentdb').DocumentClient;
 var smtp = require('sendgrid')(settings.sendGrid.userName, settings.sendGrid.password);
 var docClient = new dc(settings.docDb.uri, { masterKey: settings.docDb.primaryKey });
-var auth = new Auth(settings.authproviders, docClient, settings.docDb.database, settings.docDb.collection, smtp);
+
+
+var auth = require('../../modules/auth')(docClient, smtp);
 
 var app = express();
 
@@ -56,12 +58,7 @@ app.use(bunyanmw(
     }
 ));
 
-
-
-
-auth.init();
-
-var accessLogStream = fs.createWriteStream(__dirname + '/access.log', { flags: 'a' });
+var accessLogStream = fs.createWriteStream(__dirname + 'log/access.log', { flags: 'a' });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -83,8 +80,6 @@ app.use(session({
         secure: false
     }
 }));
-
-// app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 
 app.use(
     stylus.middleware({

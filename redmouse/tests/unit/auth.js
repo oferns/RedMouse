@@ -31,8 +31,9 @@ describe('auth', function () {
     
     describe('#login()', function () {
         it('login should return error on undefined/null profile', function () {
-            var authobj = new auth({}, {});
             
+            var authobj = require('../../modules/auth')({}, {});
+           
             authobj.login(null, function (err, account) {
                 assert(err instanceof Error, 'err is not an error');
                 assert(err.message == 'Only local profiles can login!', 'err message is wrong')
@@ -41,7 +42,7 @@ describe('auth', function () {
         })
         
         it('login should return error on non-local profile', function () {
-            var authobj = new auth({}, {});
+            var authobj = require('../../modules/auth')({}, {});
             
             authobj.login({}, function (err, account) {
                 assert(err instanceof Error, 'err is not an error');
@@ -56,7 +57,8 @@ describe('auth', function () {
                 queryCollection: function (queryDef, callback) { callback(new Error('This is an error')); }
             };
             
-            var authobj = new auth(docDbMock, {});
+            
+            var authobj = require('../../modules/auth')(docDbMock, {});
             
             var spy = chai.spy.on(authobj, 'getAccountByProvider');
             var spy2 = chai.spy.on(docDbMock, 'queryCollection');
